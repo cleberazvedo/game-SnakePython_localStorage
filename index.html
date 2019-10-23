@@ -9,33 +9,51 @@
     <link rel="stylesheet" type="text/css" href="css/keyframes.css">
     <link rel="stylesheet" type="text/css" href="css/modal.css">
     <script src="js/funcao.js"></script>
+    <script src="js/cadastro.js"></script>
+    <script src="js/validacao.js"></script>
     <link rel="icon" type="image/png" sizes="16x16" href="image/favicon.png">
 
 </head>
 
-<body class="telaLogin">
+<body class="telaLogin" onload="intervaloPiscarOlhos()">
+    <audio id="sonsButton">
+        <source src="sound/button.wav" type="audio/wav">
+    </audio>
+    <audio id="sonsText">
+        <source src="sound/textArea.wav" type="audio/wav">
+    </audio>
+    <audio id="sonsStart">
+        <source src="sound/start.wav" type="audio/wav">
+    </audio>
+
     <div class="boxSnake1 row">
         <div class="col-dg-12, col-dm-12">
-            <img id="olhosPiscando" src="image/logo.png" alt="GAME SNAKE PYTHON"
-                onmouseover="imgChange('image/logof.png'); " onmouseout="imgChange('image/logo.png')">
+
+            <img id="olhosPiscando" src="image/logo.png" alt="GAME SNAKE PYTHON" onmouseover="piscarOlhos()"
+                onmouseout="pararOlhos()">
         </div>
     </div>
+    <!-- LOGIN -->
     <div class="row">
         <div class="col-dg-12, col-dm-12">
             <div class="modal-container">
-                <button onclick="document.getElementById('id01').style.display='block'"
-                    class="modal-button efeitoSombraColor">START</button>
+                <button onclick="document.getElementById('modalSnakeLogin').style.display='block'"
+                    class="modal-button efeitoFontePiscando" onfocus="playAudio('sonsStart')"
+                    onblur="pauseAudio('sonsStart')">START</button>
 
-                <div id="id01" class="modal">
+                <div id="modalSnakeLogin" class="modal">
                     <div class="modal-animate-top displayLogin ">
                         <header>
-                            <span onclick="document.getElementById('id01').style.display='none'"
-                                class="modal-button modal-display-topright">&times;</span>
+                            <span
+                                onclick="document.getElementById('modalSnakeLogin').style.display='none'; limparMensagemAlerta()"
+                                class="modal-button modal-display-topright">&times;
+                            </span>
                         </header>
                         <form>
                             <div class="row">
                                 <div class="col-dg-12 col-dm-12">
                                     <h1>GAME SNAKE PYTHON </h1>
+                                    <h3>LOGIN</h3>
                                 </div>
                             </div>
                             <br>
@@ -45,7 +63,7 @@
                                     <label for="txtNome">JOGADOR</label>
                                 </div>
                                 <div class="col-dg-8 col-dm-8">
-                                    <input type="text" name="nome" id="txtNome" maxlength="40"
+                                    <input type="text" name="nome" id="txtNome" maxlength="40" required="required"
                                         onfocus="playAudio('sonsText')" onblur="pauseAudio('sonsText')">
                                 </div>
                             </div>
@@ -54,19 +72,21 @@
                                     <label for="txtSenha">SENHA</label>
                                 </div>
                                 <div class="col-dg-8 col-dm-8">
-                                    <input type="password" name="senha" id="txtSenha" maxlength="20"
+                                    <input type="password" name="senha" id="txtSenha" maxlength="20" required="required"
                                         onfocus="playAudio('sonsText')" onblur="pauseAudio('sonsText')">
                                 </div>
                             </div>
-                           <br>
-                           <br>
+                            <br>
+                            <br>
                             <div class="row">
                                 <div class="col-dg-6 col-dm-6">
-                                    <input type="button" value="Entrar" onclick="validar()"
+                                    <input type="button" value="Cadastrar" onclick="document.getElementById('modalSnakeCadastro').style.display = 'block';
+                                        document.getElementById('modalSnakeLogin').style.display = 'none';"
                                         onfocus="playAudio('sonsButton')" onblur="pauseAudio('sonsButton')">
                                 </div>
                                 <div class="col-dg-6 col-dm-6">
-                                    <input type="button" value="Cadastrar">
+                                    <input type="button" value="Entrar" onclick="validarLogin()"
+                                        onfocus="playAudio('sonsButton')" onblur="pauseAudio('sonsButton')">
                                 </div>
                             </div>
                         </form>
@@ -75,8 +95,91 @@
             </div>
         </div>
     </div>
-
-
+    <!-- CADASTRO -->
+    <div id="modalSnakeCadastro" class="modal">
+        <div class="modal-animate-top displayCadastro ">
+            <header>
+                <span
+                    onclick="document.getElementById('modalSnakeCadastro').style.display='none'; document.getElementById('modalSnakeLogin').style.display='block'; limparMensagemAlerta()"
+                    class="modal-button modal-display-topright">&times;</span>
+            </header>
+            <form>
+                <div class="row">
+                    <div class="col-dg-12 col-dm-12">
+                        <h1>GAME SNAKE PYTHON </h1>
+                        <h3>CADASTRO</h3>
+                    </div>
+                </div>
+                <br>
+                <br>
+                <div class="row">
+                    <div class="col-dg-5 col-dm-5">
+                        <label for="txtNome">JOGADOR</label>
+                    </div>
+                    <div class="col-dg-7 col-dm-7">
+                        <input type="text" name="nome" id="txtNomeCadastro" maxlength="40" required="required"
+                            onfocus="playAudio('sonsText')" onblur="pauseAudio('sonsText')">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-dg-5 col-dm-5">
+                        <label for="txtNome">E-MAIL</label>
+                    </div>
+                    <div class="col-dg-7 col-dm-7">
+                        <input type="email" name="email" id="txtEmailCadastro" maxlength="40" required="required"
+                            onfocus="playAudio('sonsText')" onblur="pauseAudio('sonsText')">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-dg-5 col-dm-5">
+                        <label for="txtSenha">SENHA</label>
+                    </div>
+                    <div class="col-dg-7 col-dm-7">
+                        <input type="password" name="senha" id="txtSenhaCadastro" minlength="8" maxlength="20" required="required" onfocus="playAudio('sonsText')" onblur="pauseAudio('sonsText')">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-dg-5 col-dm-5">
+                        <label for="txtSenha">CONFIRME A SENHA</label>
+                    </div>
+                    <div class="col-dg-7 col-dm-7">
+                        <input type="password" name="confSenha" id="txtConfSenhaCadastro" maxlength="20" required="required" onfocus="playAudio('sonsText')" onblur="pauseAudio('sonsText')">
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-dg-6 col-dm-6">
+                        <input type="reset" value="Limpar" id="limpar" onfocus="playAudio('sonsButton')"
+                            onblur="pauseAudio('sonsButton')">
+                    </div>
+                    <div class="col-dg-6 col-dm-6">
+                        <input type="button" value="Cadastrar" onfocus="playAudio('sonsButton')"
+                            onblur="pauseAudio('sonsButton')" onclick=" validarCadastro()">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- POPUP-->
+    <div id="modalSnakeMensagem" class="modal mensagem">
+        <div class="modal-animate-top displayMensagem ">
+            <header>
+                <span
+                    onclick="document.getElementById('modalSnakeMensagem').style.display='none'"
+                    class="modal-button modal-display-topright">&times;</span>
+            </header>
+            <br>
+            <br>
+            <form>
+                <div class="row">
+                    <div class="col-dg-12 col-dm-12">
+                        <span id="mensagemAlerta"></span>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    
 
 </body>
 
